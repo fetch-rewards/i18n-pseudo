@@ -1,0 +1,45 @@
+image:
+  name: fetch-docker.jfrog.io/go-build:latest
+  username: $DOCKER_USER
+  password: $DOCKER_PASSWORD
+definitions:
+  caches:
+    gobin: /go/bin
+    gosrc: /go/src
+    gopkg: /go/pkg
+  steps:
+    - step: &unitTest
+        name: Unit Tests
+        caches:
+          - gobin
+          - gosrc
+          - gopkg
+        script:
+          - go test -coverpkg=./... -coverprofile=coverage.out -v ./...
+          - git clone git@bitbucket.org:fetchrewards/pipelines-scripts.git
+          - pipelines-scripts/code-coverage/fetchcov
+        artifacts:
+          - coverage.out
+pipelines:
+  default:
+    - step: *unitTest
+  branches:
+    main:
+      - step: *unitTest
+      - step:
+          name: Create Tag for Commit
+          script:
+            - export NEW_PATCH_VERSION=$(expr $(git describe --tags | sed -nre 's/(^v[0-9]+\.[0-9]+\.([0-9]+)).*/\2/p') + "1")
+            - export OLD_MAJOR_AND_MINOR_VERSION=$(git describe --tags | sed -nre 's/((^v[0-9]+\.[0-9]+\.)[0-9]+).*/\2/p')
+            - git tag $OLD_MAJOR_AND_MINOR_VERSION$NEW_PATCH_VERSION
+            - git push origin HEAD:main --tags 
+  tags:
+    v**:
+      - step:
+          name: Build and upload module to repo
+          caches:
+            - gobin
+            - gosrc
+            - gopkg
+          script:
+            - jfrog rt gp go $BITBUCKET_TAG
