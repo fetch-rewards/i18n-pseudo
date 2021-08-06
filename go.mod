@@ -1,4 +1,4 @@
-module bitbucket.org/fetchrewards/g11n-go
+module bitbucket.org/fetchrewards/i18n-pseudo
 
 go 1.16
 
