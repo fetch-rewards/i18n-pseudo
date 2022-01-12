@@ -16,9 +16,15 @@ func Test_Format(t *testing.T) {
 		input := "Aaron Iz Kewl 1234567890"
 		results := gen.Format(input)
 
-		assert.True(t, strings.Contains(results, "①②③④⑤⑥⑦⑧⑨⓪"))
-		assert.True(t, !strings.Contains(results, "Aaron Iz Kewl"))
-		assert.True(t, !strings.Contains(results, "1234567890"))
+		assert.True(t, strings.Contains(results, "①②③④⑤⑥⑦⑧⑨⓪"), results)
+		assert.True(t, !strings.Contains(results, "Aaron Iz Kewl"), results)
+		assert.True(t, !strings.Contains(results, "1234567890"), results)
+	})
+
+	t.Run("Format - Non-alphanumeric characters", func(t *testing.T) {
+		input := "世界Ḇřàņḋ Ṋàṃệ™"
+		results := gen.Format(input)
+		assert.True(t, strings.Contains(results, input), "Pseudo-translated content should remain unchanged")
 	})
 
 	t.Run("Format - Ignore <>", func(t *testing.T) {
@@ -49,7 +55,6 @@ func Test_Format(t *testing.T) {
 		input := "This user <italic> ID {userId} is not good</italic> when they are a fraudster.  {receiptId} is bad!"
 
 		results := gen.Format(input)
-		fmt.Println(results)
 		assert.True(t, len(results) > len(input))
 		assert.True(t, !strings.Contains(results, "This user"))
 		assert.True(t, strings.Contains(results, "<italic>"))
@@ -225,12 +230,12 @@ func Test_FormatOptions(t *testing.T) {
 
 	t.Run("Format Options - PseudoChars", func(t *testing.T) {
 		gen := New(FormatOptions{
-			PseudoChars: map[string]string{
-				"a": "z",
-				"b": "y",
-				"c": "x",
-				"d": "w",
-				"e": "v",
+			PseudoChars: map[rune]rune{
+				'a': 'z',
+				'b': 'y',
+				'c': 'x',
+				'd': 'w',
+				'e': 'v',
 			},
 		})
 		input := "abcde fghij"
@@ -254,6 +259,6 @@ func Test_FormatOptions(t *testing.T) {
 func getExpectedResultLen(input string, per float64) int {
 	return len([]rune(defaultPrependChars)) +
 		len([]rune(input)) +
-		int(math.RoundToEven(float64(len(input)) * per)) +
+		int(math.RoundToEven(float64(len(input))*per)) +
 		len([]rune(defaultAppendChars))
 }

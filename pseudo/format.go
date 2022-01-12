@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"strings"
+	"unicode"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -38,7 +39,7 @@ type FormatOptions struct {
 	PreventExpansion bool
 
 	// The pseudo characters to use when replacing ASCII chars
-	PseudoChars map[string]string
+	PseudoChars map[rune]rune
 
 	// Length of expanded characters appended
 	TargetExpansion float64
@@ -53,7 +54,13 @@ func New(fo FormatOptions) *Format {
 
 	// Setting the Pseudo Characters if they weren't provided
 	if gen.Options.PseudoChars == nil {
-		_ = jsoniter.Unmarshal([]byte(defaultPseudoChars), &gen.Options.PseudoChars)
+		var charMap map[string]string
+		_ = jsoniter.UnmarshalFromString(defaultPseudoChars, &charMap)
+
+		gen.Options.PseudoChars = make(map[rune]rune, len(charMap))
+		for from, to := range charMap {
+			gen.Options.PseudoChars[[]rune(from)[0]] = []rune(to)[0]
+		}
 	}
 
 	if gen.Options.AppendChars == "" {
@@ -129,33 +136,34 @@ func (pf Format) generateRandomExpansion(addlChars int) string {
 }
 
 // Converts the given text to pseudo characters
-func (pf Format) makePseudo(input string) string {
+func (pf Format) makePseudo(in string) string {
 	var sb strings.Builder
 	var hasOpenCurlyBracket, hasOpenAngleBracket, hasOpenPercentSign bool
 
+	input := []rune(in)
 	for x := 0; x < len(input); x++ {
-		thisChar := string([]rune(input)[x])
+		thisChar := input[x]
 
-		if thisChar == "{" {
+		if thisChar == '{' {
 			hasOpenCurlyBracket = true
-		} else if thisChar == "}" {
+		} else if thisChar == '}' {
 			hasOpenCurlyBracket = false
-		} else if thisChar == "<" {
+		} else if thisChar == '<' {
 			// Ignoring when input contains a single < by doing a space check against the next character
-			if x != len(input) - 1 {
-				nextChar := string([]rune(input)[x+1])
-				if nextChar != " " {
+			if x < len(input)-1 {
+				nextChar := input[x+1]
+				if !unicode.IsSpace(nextChar) {
 					hasOpenAngleBracket = true
 				}
 			}
-		} else if thisChar == ">" {
+		} else if thisChar == '>' {
 			hasOpenAngleBracket = false
-		} else if thisChar == "%" {
+		} else if thisChar == '%' {
 			hasOpenPercentSign = true
 		} else if hasOpenPercentSign && x >= 2 {
 			// Only the first character following % will not get pseudo translated
-			prevSecondChar := string([]rune(input)[x-2])
-			if prevSecondChar == "%" {
+			prevSecondChar := input[x-2]
+			if prevSecondChar == '%' {
 				hasOpenPercentSign = false
 			}
 		}
@@ -168,7 +176,7 @@ func (pf Format) makePseudo(input string) string {
 			}
 		}
 
-		sb.WriteString(thisChar)
+		sb.WriteRune(thisChar)
 	}
 
 	return sb.String()
