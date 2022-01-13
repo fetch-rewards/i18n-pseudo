@@ -26,19 +26,19 @@ const (
 )
 
 type FormatOptions struct {
-	// The chars to put at the end of output
+	// The characters to put at the end of output
 	AppendChars string
 
-	// The chars to use for the expansion
+	// The characters to use for the expansion
 	ExpandChars string
 
-	// The chars to put at the beginning of output
+	// The characters to put at the beginning of output
 	PrependChars string
 
 	// Whether to expand the length of text
 	PreventExpansion bool
 
-	// The pseudo characters to use when replacing ASCII chars
+	// The pseudo characters to use when replacing ASCII characters
 	PseudoChars map[rune]rune
 
 	// Length of expanded characters appended
@@ -76,7 +76,7 @@ func New(fo FormatOptions) *Format {
 	return gen
 }
 
-// Accepts an incoming strings and converts it to Pseudo Translation
+// Accepts an incoming string and converts it to Pseudo Translation
 func (pf Format) Format(input string) string {
 	if input == "" {
 		return input
@@ -89,10 +89,10 @@ func (pf Format) Format(input string) string {
 		output = pf.expand(input)
 	}
 
-	// Convert it to pseudo
+	// Convert it to pseudo translation
 	output = pf.makePseudo(output)
 
-	// Add challenge chars
+	// Add challenge characters
 	return pf.Options.PrependChars + output + pf.Options.AppendChars
 }
 
@@ -122,7 +122,7 @@ func (pf Format) expand(input string) string {
 	return input + pf.generateRandomExpansion(addlChars)
 }
 
-// Generate a random string based on expansion characters
+// Generates a random string based on expansion characters
 func (pf Format) generateRandomExpansion(addlChars int) string {
 	var sb strings.Builder
 
