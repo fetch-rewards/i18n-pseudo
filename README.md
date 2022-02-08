@@ -34,7 +34,7 @@ Go version 1.16 or higher is required ([Downloads](https://golang.org/dl/)).
 
 Build the dependency:
 ```shell
-go get -u bitbucket.org/fetchrewards/i18n-pseudo
+go get -u github.com/fetch-rewards/i18n-pseudo
 ```
 
 ## Usage 
@@ -45,7 +45,7 @@ package main
 import (
 	"fmt"
 	
-	"bitbucket.org/fetchrewards/i18n-pseudo/pseudo"
+	"github.com/fetch-rewards/i18n-pseudo/pseudo"
 )
 
 func main() {
@@ -76,20 +76,20 @@ func main() {
 ```
 
 ### FormatOptions
-| Property           | Default                                                                                            | Description                                                                                                                                                     |
-|--------------------|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `AppendChars`      | `"世界"`                                                                                             | When provided, these characters will be appended to the output. This is helpful when you have certain characters that always seem to give your system trouble.  |
-| `PreventExpansion` | `false`                                                                                            | When `true`, will _not_ expand the input. Expanding characters is useful to ensure your codebase accounts for move verbose languages.                           |
-| `ExpandChars`      | Alphabetical characters, upper and lower case                                                      | A string of characters that will be randomly selected to create an expansion of the input string.                                                               |
-| `PrependChars`     | `"你好"`                                                                                             | When provided, these characters will be prepended to the output. This is helpful when you have certain characters that always seem to give your system trouble. |
-| `PseudoChars`      | [Reference](https://bitbucket.org/fetchrewards/i18n-pseudo/src/main/pseudo/data/pseudo_chars.json) | A hash map of the pseudo characters that will replace the ASCII characters. For default value, see the json value in the `pseudo_chars.json` file.              |
-| `TargetExpansion`  | `1.2`                                                                                              | When provided, the length of the result will be appended with random characters based on the `TargetExpansion`.                                                 |
+| Property           | Default                                                                                          | Description                                                                                                                                                     |
+|--------------------|--------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AppendChars`      | `"世界"`                                                                                           | When provided, these characters will be appended to the output. This is helpful when you have certain characters that always seem to give your system trouble.  |
+| `PreventExpansion` | `false`                                                                                          | When `true`, will _not_ expand the input. Expanding characters is useful to ensure your codebase accounts for move verbose languages.                           |
+| `ExpandChars`      | Alphabetical characters, upper and lower case                                                    | A string of characters that will be randomly selected to create an expansion of the input string.                                                               |
+| `PrependChars`     | `"你好"`                                                                                           | When provided, these characters will be prepended to the output. This is helpful when you have certain characters that always seem to give your system trouble. |
+| `PseudoChars`      | [Reference](https://github.com/fetch-rewards/i18n-pseudo/src/main/pseudo/data/pseudo_chars.json) | A hash map of the pseudo characters that will replace the ASCII characters. For default value, see the json value in the `pseudo_chars.json` file.              |
+| `TargetExpansion`  | `1.2`                                                                                            | When provided, the length of the result will be appended with random characters based on the `TargetExpansion`.                                                 |
 
 ## TODO
 * Provide a CLI option to pseudo translate a string.
 
 ## How To Contribute
-⚠️ TBD
+You can create an issue or open a pull request.
 
 ## Contributors
 | Avatar                                                                                         | User                                              |
