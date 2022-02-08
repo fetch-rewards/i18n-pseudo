@@ -99,6 +99,3 @@ func main() {
 | [![](https://avatars.githubusercontent.com/u/155617?s=50)](https://github.com/AaronPresley/)   | [Aaron Presley](https://github.com/AaronPresley/) |
 
 Inspired by [i18n-pseudo-js](https://github.com/AaronPresley/i18n-pseudo-js).
-
-## License
-⚠️ TBD
